@@ -2,6 +2,7 @@ import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import * as router from 'react-router-dom';
 import { Container } from 'reactstrap';
+import { compose } from 'recompose';
 
 import {
   AppAside,
@@ -19,6 +20,9 @@ import {
 import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
+import { ROLES } from '../../constants';
+import { firebase } from '../../index';
+import { withAuthorization, withEmailVerification } from '../../session';
 
 const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
@@ -30,7 +34,7 @@ class DefaultLayout extends Component {
 
   signOut(e) {
     e.preventDefault()
-    this.props.history.push('/login')
+    firebase.doSignOut()
   }
 
   render() {
@@ -89,4 +93,9 @@ class DefaultLayout extends Component {
   }
 }
 
-export default DefaultLayout;
+const condition = authUser => authUser && !!authUser.roles[ROLES.ADMIN];
+
+export default compose(
+	withEmailVerification,
+	withAuthorization(condition, '/login', '/login')
+)(DefaultLayout);
