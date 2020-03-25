@@ -56,7 +56,7 @@ export default class Firebase {
                 uid: authUser.uid,
                 email: authUser.email,
                 emailVerified: authUser.emailVerified,
-                // providerData: authUser.providerData,
+                providerData: authUser.providerData,
                 ...dbUser
               }
               next(authUser)

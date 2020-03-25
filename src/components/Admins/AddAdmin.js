@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Alert, Button, Card, CardBody, CardHeader, Form, FormGroup, Input, Label } from 'reactstrap';
-import { firebase } from '../../index';
+import axios from 'axios';
 import ROUTES from '../../routes';
-import { ROLES } from '../../constants';
+import { ROLES, CREATE_ADMIN_URL } from '../../constants';
 
 export default class AddAdmin extends Component {
 	constructor(props) {
@@ -24,31 +24,36 @@ export default class AddAdmin extends Component {
 		const { name, email, password } = this.state;
 
 		const roles = {};
-		roles[ROLES.ADMIN] = ROLES.ADMIN;
-    // FIXME: Fix logic to create new admin.
-		firebase
-			.doCreateUserWithEmailAndPassword(email, password)
-			.then(authUser => {
-        // Create a user in your Firebase realtime database
-				return firebase
-					.admin(authUser.user.uid)
-					.set(
-					{
-						name,
-						email,
-						roles,
-					},
-					{ merge: true });
-			})
-			.then(() => {
-				return firebase.doSendEmailVerification();
-			})
-			.then(() => {
-				this.props.history.push(ROUTES.ADMIN_LIST.path);
-			})
-			.catch(error => {
-				this.setState({ error });
-			});
+    roles[ROLES.ADMIN] = ROLES.ADMIN;
+
+    axios({
+      method: 'POST',
+      url: CREATE_ADMIN_URL,
+      data: {
+        email,
+        password,
+        name,
+        roles
+      }
+    })
+    .then(response => {
+      if(response.data.success) {
+        this.props.history.push(ROUTES.ADMIN_LIST.path);
+      } else {
+        this.setState({
+          error: {
+            message: response.data.message
+          }
+        });
+      }
+    })
+    .catch(error => {
+      this.setState({
+        error: {
+          message: error.message
+        }
+      });
+    });
 	};
 
 	onChange = event => {

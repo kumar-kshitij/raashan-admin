@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Card, CardBody, CardHeader, Table, UncontrolledTooltip } from 'reactstrap';
+import axios from 'axios';
 import { firebase } from '../../index';
+import { DELETE_ADMIN_URL } from '../../constants';
 
 export default class AdminList extends Component {
 	constructor(props) {
@@ -42,10 +44,22 @@ export default class AdminList extends Component {
     }
   }
 
-  deleteAdmin = () => {
+  deleteAdmin = (uid) => {
     let isConfirmed = window.confirm('Are you sure you want to delete this admin?');
     if(isConfirmed) {
-      // TODO: Write logic to delete admin.
+      axios({
+        method: 'POST',
+        url: DELETE_ADMIN_URL,
+        data: {
+          uid
+        }
+      })
+      .then(response => {
+        window.alert(response.data.message);
+      })
+      .catch(error => {
+        window.alert(error.message);
+      });
     }
   }
 
@@ -91,7 +105,7 @@ export default class AdminList extends Component {
                     <Button type="button"
                       id="deleteAdminBtn"
                       color="danger"
-                      onClick={this.deleteAdmin}
+                      onClick={() => this.deleteAdmin(admin.uid)}
                     >
                       <i className="fa fa-trash"></i>
                     </Button>
