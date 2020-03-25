@@ -11,6 +11,7 @@ const DefaultLayout = React.lazy(() => import('../containers/DefaultLayout'));
 
 // Pages
 const Login = React.lazy(() => import('./Login'));
+const ForgotPassword = React.lazy(() => import('./ForgotPassword'));
 
 class App extends Component {
 
@@ -20,6 +21,7 @@ class App extends Component {
           <React.Suspense fallback={loading()}>
             <Switch>
               <Route exact path="/login" name="Login Page" render={props => <Login {...props}/>} />
+              <Route exact path="/forgot-password" name="Forgot Password Page" render={props => <ForgotPassword {...props}/>} />
               <Route path="/" name="Home" render={props => <DefaultLayout {...props}/>} />
             </Switch>
           </React.Suspense>

@@ -12,12 +12,15 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      error: ''
+      error: null
     };
   }
 
   handleInputChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({
+      [event.target.name]: event.target.value,
+      error: null
+    });
   }
 
   handleSubmit = event => {
@@ -28,8 +31,8 @@ class Login extends Component {
       .then(() => {
         this.props.history.push('/');
       })
-      .catch(err => {
-        this.setState({ error: err.message });
+      .catch(error => {
+        this.setState({ error });
       });
   };
 
@@ -46,7 +49,7 @@ class Login extends Component {
                   <Form onSubmit={this.handleSubmit}>
                     <h1>Login</h1>
                     <p className="text-muted">Sign In to your account</p>
-                    {error && <Alert color="danger">{error}</Alert>}
+                    {error && <Alert color="danger">{error.message}</Alert>}
                     <InputGroup className="mb-3">
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>

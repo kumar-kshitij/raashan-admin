@@ -56,7 +56,7 @@ export default class Firebase {
                 uid: authUser.uid,
                 email: authUser.email,
                 emailVerified: authUser.emailVerified,
-                providerData: authUser.providerData,
+                // providerData: authUser.providerData,
                 ...dbUser
               }
               next(authUser)
@@ -66,13 +66,6 @@ export default class Firebase {
         fallback()
       }
     })
-  // onAuthUserListener = (next, fallback) => this.auth.onAuthStateChanged(authUser => {
-  //   if (authUser) {
-  //     next(authUser.uid);
-  //   } else {
-  //     fallback();
-  //   }
-  // });
 
   recaptchaVerifier = (container, parameters) =>
     new app.auth.RecaptchaVerifier(container, parameters);
@@ -88,4 +81,5 @@ export default class Firebase {
 
 	// *** User API ***
 	admin = uid => this.db.doc(`admins/${uid}`)
+	admins = () => this.db.collection('admins')
 }

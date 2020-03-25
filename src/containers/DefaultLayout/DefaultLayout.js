@@ -56,11 +56,11 @@ class DefaultLayout extends Component {
             <AppSidebarMinimizer />
           </AppSidebar>
           <main className="main">
-            <AppBreadcrumb appRoutes={routes} router={router}/>
+            <AppBreadcrumb appRoutes={Object.values(routes)} router={router}/>
             <Container fluid>
               <Suspense fallback={this.loading()}>
                 <Switch>
-                  {routes.map((route, idx) => {
+                  {Object.values(routes).map((route, idx) => {
                     return route.component ? (
                       <Route
                         key={idx}
